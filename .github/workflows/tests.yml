@@ -10,11 +10,11 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [macos-14, ubuntu-24.04]   # macos-14: Apple silicon (arm64)
+        os: [macos-15, ubuntu-24.04]   # macos-15: Apple silicon (arm64)
     runs-on: ${{ matrix.os }}
     steps:
     - name: Set up Homebrew (taps this repository)
-      uses: Homebrew/actions/setup-homebrew@master
+      uses: Homebrew/actions/setup-homebrew@main
     - name: Machine
       run: uname -a; brew --version; brew config | grep -E 'CPU|macOS|Clang|GCC|glibc' || true
     - name: brew install --build-from-source
