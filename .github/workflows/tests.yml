@@ -1,0 +1,28 @@
+name: brew install and test
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  test:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [macos-14, ubuntu-24.04]   # macos-14: Apple silicon (arm64)
+    runs-on: ${{ matrix.os }}
+    steps:
+    - name: Set up Homebrew (taps this repository)
+      uses: Homebrew/actions/setup-homebrew@master
+    - name: Machine
+      run: uname -a; brew --version; brew config | grep -E 'CPU|macOS|Clang|GCC|glibc' || true
+    - name: brew install --build-from-source
+      run: brew install --build-from-source --verbose yasha1971-coder/aceapex/aceapex
+    - name: brew test
+      run: brew test --verbose yasha1971-coder/aceapex/aceapex
+    - name: aceapex --version
+      run: aceapex --version
+    - name: brew audit (information, not a gate)
+      continue-on-error: true
+      run: brew audit --formula yasha1971-coder/aceapex/aceapex
